@@ -64,22 +64,31 @@ Polynomial P(x) = s + a₁x¹ + a₂x² + ... + a₁₉x¹⁹
 
 ## Using modular arithmetic to exploit the polynomial design
 Since each $a_i$ (for $i \ge 1$) is a multiple of the prime `a` given in the same connection, we know that:
+
 $$ a_i \equiv 0 \pmod{a} \quad \text{for } i = 1, 2, \ldots, 19 $$
 
 We are given the value $y = P(x)$, where:
+
 $$ y = s + a_1 x^1 + a_2 x^2 + \cdots + a_{19} x^{19} $$
 
 If we consider this equation modulo the prime `a` provided by the server for that connection, all terms containing $a_i$ become zero:
+
 $$ y \equiv s + (0 \cdot x^1) + (0 \cdot x^2) + \cdots + (0 \cdot x^{19}) \pmod{a} $$
+
 Simplifying this, we get:
+
 $$ y \equiv s \pmod{a} $$
 
 This means that for each connection, the provided pair $(x, y)$ and the prime `a` allow us to determine the remainder of the secret `s` when divided by `a`. 
 
-By connecting to the server multiple times, we can collect several such congruences. Let $(y_j, a_j)$ be the result ($y = P(x)$) and the prime modulus $a$ obtained from the $j$-th connection. We get a system of congruences:
+By connecting to the server multiple times, we can collect several such congruences. Let $(y_j, a_j)$ be the result $y = P(x)$ and the prime modulus $a$ obtained from the $j$-th connection. We get a system of congruences:
+
 $$ s \equiv y_1 \pmod{a_1} $$
+
 $$ s \equiv y_2 \pmod{a_2} $$
+
 $$ \vdots $$
+
 $$ s \equiv y_n \pmod{a_n} $$
 
 Since the $a_j$ values are generated independently as 64-bit primes for each connection, they are overwhelmingly likely to be distinct and therefore pairwise coprime. This is the exact scenario where the Chinese Remainder Theorem (CRT) can be applied to find the value of `s`.
